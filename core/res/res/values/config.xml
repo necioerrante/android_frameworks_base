@@ -2042,6 +2042,8 @@
              4 - Menu
              8 - Assistant (search)
             16 - App switch
+            32 - Camera
+            64 - Volume rocker
          For example, a device with Home, Back and Menu keys would set this
          config to 7. -->
     <integer name="config_deviceHardwareKeys">0</integer>
@@ -2050,4 +2052,5 @@
 
     <!-- If this is true, key chords can be used to take a screen record on the device. -->
     <bool name="config_enableScreenrecordChord">true</bool>
+
 </resources>

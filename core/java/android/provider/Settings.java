@@ -2072,6 +2072,25 @@ public final class Settings {
          * @hide
          */
         public static final String MEDIA_SCANNER_ON_BOOT = "media_scanner_on_boot";
+        
+        // Camera Button bring-up
+        /**
+         * Whether to wake the screen with the camera key half-press.
+         * @hide
+         */
+        public static final String CAMERA_WAKE_SCREEN = "camera_wake_screen";
+
+        /**
+         * Whether or not to send device back to sleep if Camera button is released ("Peek")
+         * @hide
+         */
+        public static final String CAMERA_SLEEP_ON_RELEASE = "camera_sleep_on_release";
+
+        /**
+         * Whether or not camera button music controls should be enabled to play/pause media tracks
+         * @hide
+         */
+        public static final String CAMERA_MUSIC_CONTROLS = "camera_music_controls";
 
         /** Whether to allow one finger quick settings expansion on the right side of the statusbar.
          *
@@ -3166,6 +3185,7 @@ public final class Settings {
           * 9 - kill app
           * 10 - go to sleep
           * 11 - OmniSwitch recents
+          * 12 - Camera
           * @hide
           */
         public static final String HARDWARE_KEY_REBINDING = "hardware_key_rebinding";
