@@ -1809,6 +1809,8 @@ public class KeyEvent extends InputEvent implements Parcelable {
             case KeyEvent.KEYCODE_SLEEP:
             case KeyEvent.KEYCODE_WAKEUP:
             case KeyEvent.KEYCODE_PAIRING:
+            case KeyEvent.KEYCODE_CAMERA:
+            case KeyEvent.KEYCODE_FOCUS:
                 return true;
         }
         return false;
