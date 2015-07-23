@@ -2157,6 +2157,18 @@ public final class Settings {
         public static final String DOZE_TIME_MODE = "doze_time_mode";
 
         /**
+         * Statusbar DU logo
+         * @hide
+         */
+        public static final String STATUS_BAR_DU_LOGO = "status_bar_du_logo";
+
+        /**
+         * Statusbar DU logo color setting
+         * @hide
+         */
+        public static final String STATUS_BAR_DU_LOGO_COLOR = "status_bar_du_logo_color";
+
+        /**
          * Defines the shortcuts to be shown on lockscreen
          * Usage is like this: target:icon|target:icon|target:icon
          * if :icon is not set, default application icon will be used
@@ -3607,6 +3619,12 @@ public final class Settings {
          * @hide
          */
         public static final String POWERMENU_POWER = "powermenu_power";
+
+        /**
+         * Whether to show the IME arrows in the navigation bar
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_IME_ARROWS = "navigation_bar_ime_arrows";
 
         /**
          * show clear all recents button
@@ -7435,6 +7453,12 @@ public final class Settings {
         * @hide
         */
        public static final String WIFI_COUNTRY_CODE = "wifi_country_code";
+
+       /**
+        * 802.11 country code in ISO 3166 format set from the sim card
+        * @hide
+        */
+       public static final String WIFI_COUNTRY_CODE_SIM0 = "wifi_country_code_sim0";
 
        /**
         * The interval in milliseconds to issue wake up scans when wifi needs

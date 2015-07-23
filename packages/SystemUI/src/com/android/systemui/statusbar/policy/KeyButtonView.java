@@ -22,6 +22,9 @@ import android.app.ActivityManager;
 import android.app.ActivityManagerNative;
 import android.app.IActivityManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.content.res.ThemeConfig;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.PorterDuff.Mode;
@@ -85,13 +88,18 @@ public class KeyButtonView extends ImageView {
             if (isPressed()) {
                 // Log.d("KeyButtonView", "longpressed: " + this);
                 if (isLongClickable()) {
-                    // Just an old-fashioned ImageView
                     performLongClick();
                 } else {
                     sendEvent(KeyEvent.ACTION_DOWN, KeyEvent.FLAG_LONG_PRESS);
                     sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_LONG_CLICKED);
                 }
-                performLongClick();
+                if (mLongpressAction != null
+                        && (mLongpressAction.equals(SlimActionConstants.ACTION_IME_NAVIGATION_UP)
+                        || mLongpressAction.equals(SlimActionConstants.ACTION_IME_NAVIGATION_DOWN))) {
+                    removeCallbacks(mCheckLongPress);
+                    postDelayed(mCheckLongPress, ViewConfiguration.getDoubleTapTimeout());
+                    return;
+                }
                 setHapticFeedbackEnabled(true);
             }
         }
@@ -174,6 +182,27 @@ public class KeyButtonView extends ImageView {
             return true;
         }
         return super.performAccessibilityAction(action, arguments);
+    }
+
+    @Override
+    public Resources getResources() {
+        ThemeConfig themeConfig = mContext.getResources().getConfiguration().themeConfig;
+        Resources res = null;
+        if (themeConfig != null) {
+            try {
+                final String navbarThemePkgName = themeConfig.getOverlayForNavBar();
+                final String sysuiThemePkgName = themeConfig.getOverlayForStatusBar();
+                // Check if the same theme is applied for systemui, if so we can skip this
+                if (navbarThemePkgName != null && !navbarThemePkgName.equals(sysuiThemePkgName)) {
+                    res = mContext.getPackageManager().getThemedResourcesForApplication(
+                            mContext.getPackageName(), navbarThemePkgName);
+                }
+            } catch (PackageManager.NameNotFoundException e) {
+                // don't care since we'll handle res being null below
+            }
+        }
+
+        return res != null ? res : super.getResources();
     }
 
     public void setQuiescentAlpha(float alpha, boolean animate) {
@@ -295,7 +324,6 @@ public class KeyButtonView extends ImageView {
 
     public void setLongClickCallback(LongClickCallback c) {
         mCallback = c;
-        setLongClickable(true);
         setOnLongClickListener(mLongPressListener);
     }
 
