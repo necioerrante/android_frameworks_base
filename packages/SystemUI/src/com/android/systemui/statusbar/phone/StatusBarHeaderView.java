@@ -67,9 +67,8 @@ import java.text.NumberFormat;
 /**
  * The view to manage the header area in the expanded status bar.
  */
-public class StatusBarHeaderView extends RelativeLayout implements View.OnClickListener,
-        BatteryController.BatteryStateChangeCallback, NextAlarmController.NextAlarmChangeCallback,
-        WeatherController.Callback {
+public class StatusBarHeaderView extends RelativeLayout implements View.OnClickListener, View.OnLongClickListener,
+        NextAlarmController.NextAlarmChangeCallback, WeatherController.Callback {
 
     private boolean mExpanded;
     private boolean mListening;
@@ -170,6 +169,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         mDateExpanded = (TextView) findViewById(R.id.date_expanded);
         mSettingsButton = findViewById(R.id.settings_button);
         mSettingsButton.setOnClickListener(this);
+        mSettingsButton.setOnLongClickListener(this);
         mTaskManagerButton = findViewById(R.id.task_manager_button);
         mQsDetailHeader = findViewById(R.id.qs_detail_header);
         mQsDetailHeader.setAlpha(0);
@@ -407,11 +407,9 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
     private void updateListeners() {
         if (mListening) {
             mSettingsObserver.observe();
-            mBatteryController.addStateChangedCallback(this);
             mNextAlarmController.addStateChangedCallback(this);
             mWeatherController.addCallback(this);
         } else {
-            mBatteryController.removeStateChangedCallback(this);
             mNextAlarmController.removeStateChangedCallback(this);
             mWeatherController.removeCallback(this);
             mSettingsObserver.unobserve();
@@ -440,16 +438,6 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
     private void updateAmPmTranslation() {
         boolean rtl = getLayoutDirection() == LAYOUT_DIRECTION_RTL;
         mAmPm.setTranslationX((rtl ? 1 : -1) * mTime.getWidth() * (1 - mTime.getScaleX()));
-    }
-
-    @Override
-    public void onBatteryLevelChanged(int level, boolean pluggedIn, boolean charging) {
-        // could not care less
-    }
-
-    @Override
-    public void onPowerSaveChanged() {
-        // could not care less
     }
 
     @Override
@@ -572,9 +560,24 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         }
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+        if (v == mSettingsButton) {
+            startSettingsLongClickActivity();
+        }
+        return false;
+    }
+
     private void startSettingsActivity() {
         mActivityStarter.startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS),
                 true /* dismissShade */);
+    }
+
+    private void startSettingsLongClickActivity() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+	intent.setClassName("com.android.settings",
+            "com.android.settings.Settings$DirtyTweaksActivity");
+        mActivityStarter.startActivity(intent, true /* dismissShade */);
     }
 
     private void startBatteryActivity() {
